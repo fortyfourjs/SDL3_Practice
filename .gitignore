@@ -8,6 +8,9 @@ Release/
 *.db
 *.ipch
 
+#VS Code settings and debug config
+.vscode/
+
 # CMake build folders
 build/
 out/

@@ -10,7 +10,8 @@ endif()
 
 find_package(SDL3 REQUIRED)
 
-add_executable(SDL3_Practice 
+#adauga fisiere noi
+add_executable(SDL3_Practice
     main.cpp
 )
 
