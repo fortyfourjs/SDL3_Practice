@@ -1,0 +1,18 @@
+# Visual Studio build & temp files
+.vs/
+x64/
+Debug/
+Release/
+*.user
+*.suo
+*.db
+*.ipch
+
+# CMake build folders
+build/
+out/
+
+# Compiled Executables & Objects
+*.exe
+*.obj
+*.o
