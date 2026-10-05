@@ -13,6 +13,8 @@ find_package(SDL3 REQUIRED)
 #adauga fisiere noi
 add_executable(SDL3_Practice
     main.cpp
+    board.h
+    board.cpp
 )
 
 target_link_libraries(SDL3_Practice PRIVATE SDL3::SDL3)
