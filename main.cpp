@@ -34,17 +34,22 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
     if (event->type == SDL_EVENT_QUIT) {
         return SDL_APP_SUCCESS;  /* end the program, reporting success to the OS. */
     }
+    board.handleInput(event);
     return SDL_APP_CONTINUE;  /* carry on with the program! */
 }
 
 /* This function runs once per frame, and is the heart of the program. */
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
+    static double lastTime = 0.0;
     const double now = ((double)SDL_GetTicks()) / 1000.0;  /* convert from milliseconds to seconds. */
+    float deltaTime = now - lastTime;
+    lastTime = now;
     /* choose the color for the frame we will draw. */
     SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
     /* clear the window to the draw color. */
     SDL_RenderClear(renderer);
+    board.update(deltaTime);
     board.render(renderer);
     /* put the newly-cleared rendering on the screen. */
     SDL_RenderPresent(renderer);
