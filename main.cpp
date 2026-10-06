@@ -41,7 +41,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
     const double now = ((double)SDL_GetTicks()) / 1000.0;  /* convert from milliseconds to seconds. */
-    /* choose the color for the frame we will draw. The sine wave trick makes it fade between colors smoothly. */
+    /* choose the color for the frame we will draw. */
     SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
     /* clear the window to the draw color. */
     SDL_RenderClear(renderer);
