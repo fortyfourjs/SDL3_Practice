@@ -33,6 +33,8 @@ add_executable(SDL3_Practice
     main.cpp
     board.h
     board.cpp
+    input.h
+    input.cpp
 )
 
 # Legare biblioteci

@@ -2,19 +2,21 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include "board.h"
+#include "input.h"
 
  /* We will use this renderer to draw into this window every frame. */
 static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;
 
 Board board;
+InputManager inputManager;
 
 /* This function runs once at startup. */
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
     SDL_SetAppMetadata("Example Renderer Clear", "1.0", "com.example.renderer-clear");
 
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD)) {
         SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
@@ -34,11 +36,11 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
     if (event->type == SDL_EVENT_QUIT) {
         return SDL_APP_SUCCESS;  /* end the program, reporting success to the OS. */
     }
-    board.handleInput(event);
+    inputManager.handleInput(event);
     return SDL_APP_CONTINUE;  /* carry on with the program! */
 }
 
-/* This function runs once per frame, and is the heart of the program. */
+/* This function runs once per frame */
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
     static double lastTime = 0.0;
@@ -49,12 +51,12 @@ SDL_AppResult SDL_AppIterate(void* appstate)
     SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
     /* clear the window to the draw color. */
     SDL_RenderClear(renderer);
-    board.update(deltaTime);
+    board.update(deltaTime, inputManager);
     board.render(renderer);
     /* put the newly-cleared rendering on the screen. */
     SDL_RenderPresent(renderer);
 
-    return SDL_APP_CONTINUE;  /* carry on with the program! */
+    return SDL_APP_CONTINUE;  /* carry on  */
 }
 
 /* This function runs once at shutdown. */

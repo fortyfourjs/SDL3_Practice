@@ -1,18 +1,19 @@
 #include <SDL3/SDL.h>
 #include "board.h"
+#include "input.h"
 
-void Board::update(float deltaTime){
-    if(moveUp == true){
+void Board::update(float deltaTime, const InputManager& input){
+    if(input.moveUp == true){
         velocityY = -200.0f;
-    }else if(moveDown == true){
+    }else if(input.moveDown == true){
         velocityY = 200.0f;
     }else{
         velocityY = 0.0f;
     }
 
-    if(moveLeft == true){
+    if(input.moveLeft == true){
         velocityX = -200.0f;
-    }else if(moveRight == true){
+    }else if(input.moveRight == true){
         velocityX = 200.0f;
     }else{
         velocityX = 0.0f;
@@ -20,42 +21,7 @@ void Board::update(float deltaTime){
     x += velocityX * deltaTime;
     y += velocityY * deltaTime; 
 }
-void Board::handleInput(const SDL_Event *event){
-    if(!event) return;
-    
-    if(event->type == SDL_EVENT_KEY_DOWN){
-        switch(event->key.key){
-            case SDLK_UP:
-                moveUp = true;
-                break;
-            case SDLK_DOWN:
-                moveDown = true;
-                break;
-            case SDLK_LEFT:
-                moveLeft = true;
-                break;
-            case SDLK_RIGHT:
-                moveRight = true;
-                break;
-        }
-    }
-    if(event->type == SDL_EVENT_KEY_UP){
-        switch(event->key.key){
-            case SDLK_UP:
-                moveUp = false;
-                break;
-            case SDLK_DOWN:
-                moveDown = false;
-                break;
-            case SDLK_LEFT:
-                moveLeft = false;
-                break;
-            case SDLK_RIGHT:
-                moveRight = false;
-                break;
-        }
-    }
-}
+
 void Board::render(SDL_Renderer* renderer){
     //seteaza bg 
     SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
