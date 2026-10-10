@@ -22,15 +22,16 @@ void Board::update(float deltaTime, const InputManager& input){
     y += velocityY * deltaTime; 
 }
 
-void Board::render(SDL_Renderer* renderer){
-    //seteaza bg 
-    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
-
+void Board::render(SDL_Renderer* renderer, SDL_Texture* texture){
     //dreptunghi
     SDL_FRect dreptunghi = { x, y, (float)CELL_SIZE, (float)CELL_SIZE};
-
-    //deseneaza dreptunghiul
-    SDL_RenderFillRect(renderer, &dreptunghi);
+    //if sprite doesnt load, draw rectangle.
+    if(texture == NULL){
+        SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+        SDL_RenderFillRect(renderer, &dreptunghi);
+    }else{
+        SDL_RenderTexture(renderer, texture, NULL, &dreptunghi);
+    }
 
 }
 

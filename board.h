@@ -14,7 +14,7 @@ class Board{
         float velocityY{0.0f};
 
         void update(float deltaTime, const InputManager& input);
-        void render(SDL_Renderer* renderer);
+        void render(SDL_Renderer* renderer, SDL_Texture* texture);
         
         
 };
