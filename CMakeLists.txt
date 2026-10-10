@@ -37,6 +37,12 @@ add_executable(SDL3_Practice
     input.cpp
 )
 
+add_custom_command(TARGET SDL3_Practice POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_CURRENT_SOURCE_DIR}/assets"
+    "$<TARGET_FILE_DIR:SDL3_Practice>/assets"
+)
+
 # Legare biblioteci
 target_link_libraries(SDL3_Practice PRIVATE 
     SDL3::SDL3

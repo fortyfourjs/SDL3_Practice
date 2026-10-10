@@ -4,6 +4,7 @@
 #include <SDL3_image/SDL_image.h>
 #include "board.h"
 #include "input.h"
+#include <string>
 
  /* We will use this renderer to draw into this window every frame. */
 static SDL_Window* window = NULL;
@@ -28,10 +29,10 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
         return SDL_APP_FAILURE;
     }
     SDL_SetRenderLogicalPresentation(renderer, 800, 600, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+    spriteTexture = IMG_LoadTexture(renderer, "assets/charmeleon.png");
 
-    SDL_Texture* spriteTexture = IMG_LoadTexture(renderer, "assets/sphere.png");
     if(spriteTexture == NULL){
-        SDL_Log("Eroare la incarcare", SDL_GetError());
+        SDL_Log("Eroare la incarcare %s", SDL_GetError());
     }else{
         SDL_Log("Incarcare reusita");
     }
