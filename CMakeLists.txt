@@ -35,6 +35,8 @@ add_executable(SDL3_Practice
     board.cpp
     input.h
     input.cpp
+    game.h
+    game.cpp
 )
 
 add_custom_command(TARGET SDL3_Practice POST_BUILD

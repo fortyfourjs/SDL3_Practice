@@ -1,4 +1,5 @@
-#include "SDL3/SDL.h"
+#pragma once
+#include <SDL3/SDL.h>
 #include "board.h"
 #include "input.h"
 
@@ -20,7 +21,7 @@ class Game{
     private:
         SDL_Window* window = nullptr;
         SDL_Renderer* renderer = nullptr;
-
+		SDL_Texture* spriteTexture = nullptr;
         Board board;
         InputManager inputManager;
     };
