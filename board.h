@@ -8,8 +8,8 @@ class Board{
         static constexpr int HEIGHT = 20;
         static constexpr int CELL_SIZE = 90;
        
-        float x{100.0f};
-        float y{100.0f};
+        float x{10.0f};
+        float y{10.0f};
         float velocityX{0.0f};
         float velocityY{0.0f};
         float groundY;

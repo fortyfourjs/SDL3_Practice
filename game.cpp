@@ -3,16 +3,18 @@
 #include "game.h"
 
 bool Game::init(const char* title, int width, int height) {
+	WIN_WIDTH = width;
+	WIN_HEIGHT = height;
 	if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD)) {
 		SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
 		return false;
 	}
 	
-	if (!SDL_CreateWindowAndRenderer(title, width, height, SDL_WINDOW_RESIZABLE, &window, &renderer)) {
+	if (!SDL_CreateWindowAndRenderer(title, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_RESIZABLE, &window, &renderer)) {
 		SDL_Log("Couldn't create window: %s", SDL_GetError());
 		return false;
 	}
-	SDL_SetRenderLogicalPresentation(renderer, width, height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+	SDL_SetRenderLogicalPresentation(renderer, WIN_WIDTH, WIN_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 	spriteTexture = IMG_LoadTexture(renderer, "assets/charmeleon.png");
 	if (!spriteTexture) {
 		SDL_Log("Error loading texture: %s", SDL_GetError());
@@ -29,6 +31,11 @@ void Game::render() {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 	board.render(renderer, spriteTexture);
+
+	float groundY = (float)WIN_HEIGHT - groundHeight;
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_RenderLine(renderer, 0.0f, groundY, (float)WIN_WIDTH, groundY);
+
 	SDL_RenderPresent(renderer);
 }
 

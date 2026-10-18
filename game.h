@@ -24,4 +24,9 @@ class Game{
 		SDL_Texture* spriteTexture = nullptr;
         Board board;
         InputManager inputManager;
+
+        float groundHeight = 50.0f;
+        
+        int WIN_HEIGHT = 800;
+        int WIN_WIDTH = 600;
     };
