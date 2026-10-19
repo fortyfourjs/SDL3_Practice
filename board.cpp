@@ -2,36 +2,49 @@
 #include "board.h"
 #include "input.h"
 
+void Board::init(int windowWidth, int windowHeight) {
+	m_windowWidth = windowWidth;
+	m_windowHeight = windowHeight;
+
+    m_groundY = (float)m_windowHeight - m_groundMargin - CHARACTER_SIZE;
+    m_playerY = m_groundY;
+
+	m_playerX = ((float)m_windowWidth - CHARACTER_SIZE) / 2.0f;
+}
+
 void Board::update(float deltaTime, const InputManager& input){
     if(input.moveUp == true){
-        velocityY = -200.0f;
+        m_playerVelocityY = -200.0f;
     }else if(input.moveDown == true){
-        velocityY = 200.0f;
+        m_playerVelocityY = 200.0f;
     }else{
-        velocityY = 0.0f;
+        m_playerVelocityY = 0.0f;
     }
 
     if(input.moveLeft == true){
-        velocityX = -200.0f;
+        m_playerVelocityX = -200.0f;
     }else if(input.moveRight == true){
-        velocityX = 200.0f;
+        m_playerVelocityX = 200.0f;
     }else{
-        velocityX = 0.0f;
+        m_playerVelocityX = 0.0f;
     }
-    x += velocityX * deltaTime;
-    y += velocityY * deltaTime; 
+    m_playerX += m_playerVelocityX * deltaTime;
+    m_playerY += m_playerVelocityY * deltaTime; 
 }
 
-void Board::render(SDL_Renderer* renderer, SDL_Texture* texture){
+void Board::render(SDL_Renderer* renderer, SDL_Texture* characterTexture){
     //dreptunghi
-    SDL_FRect dreptunghi = { x, y, (float)CELL_SIZE, (float)CELL_SIZE};
+    SDL_FRect playerRect = { m_playerX, m_playerY, (float)CHARACTER_SIZE, (float)CHARACTER_SIZE};
     //if sprite doesnt load, draw rectangle.
-    if(texture == NULL){
+    if(characterTexture == nullptr){
         SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
-        SDL_RenderFillRect(renderer, &dreptunghi);
+        SDL_RenderFillRect(renderer, &playerRect);
     }else{
-        SDL_RenderTexture(renderer, texture, NULL, &dreptunghi);
+        SDL_RenderTexture(renderer, characterTexture, nullptr, &playerRect);
     }
+    float groundLineY = m_groundY + CHARACTER_SIZE;
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderLine(renderer, 0.0f, groundLineY, (float)m_windowWidth, groundLineY);
 
 }
 

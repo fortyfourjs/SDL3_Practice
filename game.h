@@ -16,17 +16,16 @@ class Game{
         void cleanup();
 
         SDL_Renderer* getRenderer() const{
-            return renderer;
+            return m_renderer;
         }
     private:
-        SDL_Window* window = nullptr;
-        SDL_Renderer* renderer = nullptr;
-		SDL_Texture* spriteTexture = nullptr;
-        Board board;
-        InputManager inputManager;
+        SDL_Window* m_window = nullptr;
+        SDL_Renderer* m_renderer = nullptr;
+		SDL_Texture* m_characterTexture = nullptr;
 
-        float groundHeight = 50.0f;
-        
-        int WIN_HEIGHT = 800;
-        int WIN_WIDTH = 600;
+        Board m_board;
+        InputManager m_inputManager;
+
+        int m_windowHeight = 800;
+        int m_windowWidth = 600;
     };

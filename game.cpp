@@ -3,54 +3,52 @@
 #include "game.h"
 
 bool Game::init(const char* title, int width, int height) {
-	WIN_WIDTH = width;
-	WIN_HEIGHT = height;
+	m_windowWidth = width;
+	m_windowHeight = height;
 	if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD)) {
 		SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
 		return false;
 	}
 	
-	if (!SDL_CreateWindowAndRenderer(title, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_RESIZABLE, &window, &renderer)) {
+	if (!SDL_CreateWindowAndRenderer(title, m_windowWidth, m_windowHeight, SDL_WINDOW_RESIZABLE, &m_window, &m_renderer)) {
 		SDL_Log("Couldn't create window: %s", SDL_GetError());
 		return false;
 	}
-	SDL_SetRenderLogicalPresentation(renderer, WIN_WIDTH, WIN_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
-	spriteTexture = IMG_LoadTexture(renderer, "assets/charmeleon.png");
-	if (!spriteTexture) {
+	SDL_SetRenderLogicalPresentation(m_renderer, m_windowWidth, m_windowHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+
+	m_board.init(m_windowWidth, m_windowHeight);
+
+	m_characterTexture = IMG_LoadTexture(m_renderer, "assets/charmeleon.png");
+	if (!m_characterTexture) {
 		SDL_Log("Error loading texture: %s", SDL_GetError());
 	}
 	return true;
 }
 void Game::handleEvent(const SDL_Event* event) {
-	inputManager.handleInput(event);
+	m_inputManager.handleInput(event);
 }
 void Game::update(float deltaTime) {
-	board.update(deltaTime, inputManager);
+	m_board.update(deltaTime, m_inputManager);
 }
 void Game::render() {
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderClear(renderer);
-	board.render(renderer, spriteTexture);
-
-	float groundY = (float)WIN_HEIGHT - groundHeight;
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_RenderLine(renderer, 0.0f, groundY, (float)WIN_WIDTH, groundY);
-
-	SDL_RenderPresent(renderer);
+	SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
+	SDL_RenderClear(m_renderer);
+	m_board.render(m_renderer, m_characterTexture);
+	SDL_RenderPresent(m_renderer);
 }
 
 void Game::cleanup() {
-	if (spriteTexture) {
-		SDL_DestroyTexture(spriteTexture);
-		spriteTexture = nullptr;
+	if (m_characterTexture) {
+		SDL_DestroyTexture(m_characterTexture);
+		m_characterTexture = nullptr;
 	}
-	if (renderer) {
-		SDL_DestroyRenderer(renderer);
-		renderer = nullptr;
+	if (m_renderer) {
+		SDL_DestroyRenderer(m_renderer);
+		m_renderer = nullptr;
 	}
-	if (window) {
-		SDL_DestroyWindow(window);
-		window = nullptr;
+	if (m_window) {
+		SDL_DestroyWindow(m_window);
+		m_window = nullptr;
 	}
 	SDL_Quit();
 }

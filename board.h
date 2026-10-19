@@ -4,18 +4,27 @@
 
 class Board{
     public:
-        static constexpr int WIDTH = 10;
-        static constexpr int HEIGHT = 20;
-        static constexpr int CELL_SIZE = 90;
-       
-        float x{10.0f};
-        float y{10.0f};
-        float velocityX{0.0f};
-        float velocityY{0.0f};
-        float groundY;
+        static constexpr int GRID_COLS = 10;
+        static constexpr int GRID_ROWS = 20;
+        static constexpr int CHARACTER_SIZE = 90;
 
+        /*player state*/
+        float m_playerX{0.0f};
+        float m_playerY{0.0f};
+        float m_playerVelocityX{0.0f};
+        float m_playerVelocityY{0.0f};
+
+        /*ground state*/
+        float m_groundY{0.0f};
+		float m_groundMargin{ 20.0f };
+
+        /*screen dimensions*/
+        int m_windowWidth{0};
+        int m_windowHeight{0};
+
+		void init(int windowWidth, int windowHeight);
         void update(float deltaTime, const InputManager& input);
-        void render(SDL_Renderer* renderer, SDL_Texture* texture);
+        void render(SDL_Renderer* renderer, SDL_Texture* characterTexture);
         
         
 };
