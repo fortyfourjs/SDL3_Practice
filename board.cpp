@@ -13,13 +13,12 @@ void Board::init(int windowWidth, int windowHeight) {
 }
 
 void Board::update(float deltaTime, const InputManager& input){
-    if(input.moveUp == true){
-        m_playerVelocityY = -200.0f;
-    }else if(input.moveDown == true){
-        m_playerVelocityY = 200.0f;
-    }else{
-        m_playerVelocityY = 0.0f;
+    if(input.moveUp && m_isGrounded){
+        m_playerVelocityY = m_jumpStrength;
+        m_isGrounded = false;
     }
+    m_playerVelocityY += m_gravity * deltaTime;
+    m_playerY += m_playerVelocityY * deltaTime;
 
     if(input.moveLeft == true){
         m_playerVelocityX = -200.0f;
@@ -29,7 +28,24 @@ void Board::update(float deltaTime, const InputManager& input){
         m_playerVelocityX = 0.0f;
     }
     m_playerX += m_playerVelocityX * deltaTime;
-    m_playerY += m_playerVelocityY * deltaTime; 
+
+    if(m_playerX < 0.0f){
+        m_playerX = 0.0f;
+    }else if(m_playerX + CHARACTER_SIZE > (float)m_windowWidth){
+        m_playerX = (float)m_windowWidth - CHARACTER_SIZE;
+    }
+
+    if(m_playerY > m_groundY){
+        m_playerY = m_groundY;
+        m_playerVelocityY = 0.0f;
+        m_isGrounded = true;
+    }else{
+        m_isGrounded = false;
+    }
+    if(m_playerY < 0.0f){
+        m_playerY = 0.0f;
+        m_playerVelocityY = 0.0f;
+    }
 }
 
 void Board::render(SDL_Renderer* renderer, SDL_Texture* characterTexture){

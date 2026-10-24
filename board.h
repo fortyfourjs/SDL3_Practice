@@ -13,10 +13,13 @@ class Board{
         float m_playerY{0.0f};
         float m_playerVelocityX{0.0f};
         float m_playerVelocityY{0.0f};
+        bool  m_isGrounded = true;
 
         /*ground state*/
         float m_groundY{0.0f};
 		float m_groundMargin{ 20.0f };
+        float m_gravity{1000.0f};
+        float m_jumpStrength{-300.0f};
 
         /*screen dimensions*/
         int m_windowWidth{0};
