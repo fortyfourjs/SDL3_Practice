@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL3/SDL.h>
 #include "input.h"
+#include <vector>
 
 class Board{
     public:
@@ -25,6 +26,8 @@ class Board{
         int m_windowWidth{0};
         int m_windowHeight{0};
 
+        std::vector<SDL_FRect> m_platforms;
+        void renderPlatform(SDL_Renderer* renderer);
 		void init(int windowWidth, int windowHeight);
         void update(float deltaTime, const InputManager& input);
         void render(SDL_Renderer* renderer, SDL_Texture* characterTexture);

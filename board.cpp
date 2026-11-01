@@ -10,6 +10,11 @@ void Board::init(int windowWidth, int windowHeight) {
     m_playerY = m_groundY;
 
 	m_playerX = ((float)m_windowWidth - CHARACTER_SIZE) / 2.0f;
+
+    SDL_FRect platform1 = {200.0f, 400.0f, 150.0f, 20.0f};
+    SDL_FRect platform2 = {300.0f, 200.0f, 100.0f, 20.0f};
+    m_platforms.push_back(platform1);
+    m_platforms.push_back(platform2);
 }
 
 void Board::update(float deltaTime, const InputManager& input){
@@ -46,6 +51,7 @@ void Board::update(float deltaTime, const InputManager& input){
         m_playerY = 0.0f;
         m_playerVelocityY = 0.0f;
     }
+
 }
 
 void Board::render(SDL_Renderer* renderer, SDL_Texture* characterTexture){
@@ -62,5 +68,14 @@ void Board::render(SDL_Renderer* renderer, SDL_Texture* characterTexture){
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderLine(renderer, 0.0f, groundLineY, (float)m_windowWidth, groundLineY);
 
+    renderPlatform(renderer);
+
+}
+
+void Board::renderPlatform(SDL_Renderer* renderer){
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    for(const auto& platform : m_platforms){
+        SDL_RenderFillRect(renderer, &platform);
+    }
 }
 
