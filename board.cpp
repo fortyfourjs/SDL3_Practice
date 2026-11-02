@@ -11,6 +11,8 @@ void Board::init(int windowWidth, int windowHeight) {
 
 	m_playerX = ((float)m_windowWidth - CHARACTER_SIZE) / 2.0f;
 
+    //populate platforms
+    m_platforms.clear();
     SDL_FRect platform1 = {200.0f, 400.0f, 150.0f, 20.0f};
     SDL_FRect platform2 = {300.0f, 200.0f, 100.0f, 20.0f};
     m_platforms.push_back(platform1);
@@ -18,7 +20,7 @@ void Board::init(int windowWidth, int windowHeight) {
 }
 
 void Board::update(float deltaTime, const InputManager& input){
-    if(input.moveUp && m_isGrounded){
+    if(input.moveUp && m_isGrounded){ //jump input and gravity
         m_playerVelocityY = m_jumpStrength;
         m_isGrounded = false;
     }
@@ -34,13 +36,13 @@ void Board::update(float deltaTime, const InputManager& input){
     }
     m_playerX += m_playerVelocityX * deltaTime;
 
-    if(m_playerX < 0.0f){
+    if(m_playerX < 0.0f){ //horizontal border
         m_playerX = 0.0f;
     }else if(m_playerX + CHARACTER_SIZE > (float)m_windowWidth){
         m_playerX = (float)m_windowWidth - CHARACTER_SIZE;
     }
 
-    if(m_playerY > m_groundY){
+    if(m_playerY > m_groundY){ //ground collision
         m_playerY = m_groundY;
         m_playerVelocityY = 0.0f;
         m_isGrounded = true;
@@ -50,6 +52,21 @@ void Board::update(float deltaTime, const InputManager& input){
     if(m_playerY < 0.0f){
         m_playerY = 0.0f;
         m_playerVelocityY = 0.0f;
+    }
+    //platform collision
+    SDL_FRect playerRect = { m_playerX, m_playerY, (float)CHARACTER_SIZE, (float)CHARACTER_SIZE};
+    for(const auto& platform : m_platforms){
+        if(SDL_HasRectIntersectionFloat(&playerRect, &platform)){
+            if(m_playerVelocityY >= 0.0f){
+                m_playerY = platform.y - CHARACTER_SIZE;
+                m_playerVelocityY = 0.0f;
+                m_isGrounded = true;
+            }
+            else if(m_playerVelocityY < 0.0f){
+                m_playerY = platform.y + platform.h;
+                m_playerVelocityY = 0.0f;
+            }
+        }
     }
 
 }

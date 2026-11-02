@@ -19,8 +19,8 @@ class Board{
         /*ground state*/
         float m_groundY{0.0f};
 		float m_groundMargin{ 20.0f };
-        float m_gravity{1000.0f};
-        float m_jumpStrength{-300.0f};
+        float m_gravity{500.0f};
+        float m_jumpStrength{-500.0f};
 
         /*screen dimensions*/
         int m_windowWidth{0};
