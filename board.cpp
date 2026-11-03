@@ -13,13 +13,29 @@ void Board::init(int windowWidth, int windowHeight) {
 
     //populate platforms
     m_platforms.clear();
-    SDL_FRect platform1 = {200.0f, 400.0f, 150.0f, 20.0f};
-    SDL_FRect platform2 = {300.0f, 200.0f, 100.0f, 20.0f};
+    MovingPlatform platform1;
+    platform1.rect = {200.0f, 400.0f, 150.0f, 20.0f};
+    platform1.startX = 100.0f;
+    platform1.endX = 400.0f;
+    platform1.speed = 100.0f;
+    platform1.dirX = 1.0f;
+    platform1.dirY = 0.0f;
+    MovingPlatform platform2;
+    platform2.rect = {300.0f, 200.0f, 100.0f, 20.0f};
+    platform2.startX = 200.0f;
+    platform2.endX = 500.0f;
+    platform2.speed = 150.0f;
+    platform2.dirX = -1.0f;
+    platform2.dirY = 0.0f;
+
     m_platforms.push_back(platform1);
     m_platforms.push_back(platform2);
 }
 
 void Board::update(float deltaTime, const InputManager& input){
+    for(auto& platform : m_platforms){ //updpate platform positions
+        updatePlatform(&platform, deltaTime);
+    }
     if(input.moveUp && m_isGrounded){ //jump input and gravity
         m_playerVelocityY = m_jumpStrength;
         m_isGrounded = false;
@@ -56,14 +72,15 @@ void Board::update(float deltaTime, const InputManager& input){
     //platform collision
     SDL_FRect playerRect = { m_playerX, m_playerY, (float)CHARACTER_SIZE, (float)CHARACTER_SIZE};
     for(const auto& platform : m_platforms){
-        if(SDL_HasRectIntersectionFloat(&playerRect, &platform)){
-            if(m_playerVelocityY >= 0.0f){
-                m_playerY = platform.y - CHARACTER_SIZE;
+        if(SDL_HasRectIntersectionFloat(&playerRect, &platform.rect)){
+            if(m_playerVelocityY >= 0.0f && (m_playerY + CHARACTER_SIZE - m_playerVelocityY * deltaTime) <= platform.rect.y + 10.0f){
+                m_playerY = platform.rect.y - CHARACTER_SIZE;
                 m_playerVelocityY = 0.0f;
                 m_isGrounded = true;
+                m_playerX += platform.speed * platform.dirX * deltaTime;
             }
             else if(m_playerVelocityY < 0.0f){
-                m_playerY = platform.y + platform.h;
+                m_playerY = platform.rect.y + platform.rect.h;
                 m_playerVelocityY = 0.0f;
             }
         }
@@ -88,11 +105,22 @@ void Board::render(SDL_Renderer* renderer, SDL_Texture* characterTexture){
     renderPlatform(renderer);
 
 }
+void Board::updatePlatform(MovingPlatform *m_platforms, float deltaTime){
+    m_platforms->rect.x += m_platforms->speed * m_platforms->dirX * deltaTime;
+    m_platforms->rect.y += m_platforms->speed * m_platforms->dirY * deltaTime;
 
+    if(m_platforms->rect.x >= m_platforms->endX){
+        m_platforms->rect.x = m_platforms->endX;
+        m_platforms->dirX = -1.0f;
+    }else if(m_platforms->rect.x <= m_platforms->startX){
+        m_platforms->rect.x = m_platforms->startX;
+        m_platforms->dirX= 1.0f;
+    }
+}
 void Board::renderPlatform(SDL_Renderer* renderer){
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     for(const auto& platform : m_platforms){
-        SDL_RenderFillRect(renderer, &platform);
+        SDL_RenderFillRect(renderer, &platform.rect);
     }
 }
 

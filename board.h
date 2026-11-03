@@ -26,10 +26,19 @@ class Board{
         int m_windowWidth{0};
         int m_windowHeight{0};
 
-        std::vector<SDL_FRect> m_platforms;
+        typedef struct{
+            SDL_FRect rect;
+            float startX, startY;
+            float endX, endY;
+            float speed;
+            float dirX, dirY;
+        } MovingPlatform;
+
+        std::vector<MovingPlatform> m_platforms;
         void renderPlatform(SDL_Renderer* renderer);
 		void init(int windowWidth, int windowHeight);
         void update(float deltaTime, const InputManager& input);
+        void updatePlatform(MovingPlatform *m_platforms, float deltaTime);
         void render(SDL_Renderer* renderer, SDL_Texture* characterTexture);
         
         
