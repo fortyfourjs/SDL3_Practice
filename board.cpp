@@ -57,33 +57,44 @@ void Board::update(float deltaTime, const InputManager& input){
     }else if(m_playerX + CHARACTER_SIZE > (float)m_windowWidth){
         m_playerX = (float)m_windowWidth - CHARACTER_SIZE;
     }
+    m_isGrounded = false;
 
-    if(m_playerY > m_groundY){ //ground collision
-        m_playerY = m_groundY;
-        m_playerVelocityY = 0.0f;
-        m_isGrounded = true;
-    }else{
-        m_isGrounded = false;
-    }
-    if(m_playerY < 0.0f){
-        m_playerY = 0.0f;
-        m_playerVelocityY = 0.0f;
-    }
     //platform collision
     SDL_FRect playerRect = { m_playerX, m_playerY, (float)CHARACTER_SIZE, (float)CHARACTER_SIZE};
     for(const auto& platform : m_platforms){
         if(SDL_HasRectIntersectionFloat(&playerRect, &platform.rect)){
-            if(m_playerVelocityY >= 0.0f && (m_playerY + CHARACTER_SIZE - m_playerVelocityY * deltaTime) <= platform.rect.y + 10.0f){
-                m_playerY = platform.rect.y - CHARACTER_SIZE;
-                m_playerVelocityY = 0.0f;
-                m_isGrounded = true;
-                m_playerX += platform.speed * platform.dirX * deltaTime;
+            //landing on top
+            if(m_playerVelocityY >= 0.0f){
+                float prevFeetY = (m_playerY + CHARACTER_SIZE) - (m_playerVelocityY * deltaTime);
+                if(prevFeetY <= platform.rect.y + 15.0f){
+                    m_playerY = platform.rect.y - CHARACTER_SIZE;
+                    m_playerVelocityY = 0.0f;
+                    m_isGrounded = true;
+
+                    //player moves with the platform
+                    m_playerX += platform.speed * platform.dirX * deltaTime;
+                }
             }
+            //moving up, head bonk
             else if(m_playerVelocityY < 0.0f){
-                m_playerY = platform.rect.y + platform.rect.h;
-                m_playerVelocityY = 0.0f;
+                float prevHeadY = m_playerY - (m_playerVelocityY * deltaTime);
+                if(prevHeadY >= platform.rect.y + platform.rect.h -15.0f){
+                    m_playerY = platform.rect.y + platform.rect.h;
+                    m_playerVelocityY = 0.0f;
+                }
             }
         }
+    }
+
+    if(m_playerY >= m_groundY){ //ground collision
+        m_playerY = m_groundY;
+        m_playerVelocityY = 0.0f;
+        m_isGrounded = true;
+    }
+    //top screen limit
+    if(m_playerY < 0.0f){
+        m_playerY = 0.0f;
+        m_playerVelocityY = 0.0f;
     }
 
 }

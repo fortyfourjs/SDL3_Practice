@@ -2,6 +2,21 @@
 #include <SDL3/SDL.h>
 #include "input.h"
 #include <vector>
+#include <memory>
+
+class Entity {
+    public:
+        virtual ~Entity() = default;
+
+        virtual void update(float deltaTime) = 0;
+        virtual void render(SDL_Renderer* renderer) = 0;
+        
+        const SDL_FRect& getRect() const { return m_rect; }
+
+        protected:
+            SDL_FRect m_rect{0.0f, 0.0f, 0.0f, 0.0f};
+            bool m_isDead{false};
+};
 
 class Board{
     public:
@@ -18,9 +33,9 @@ class Board{
 
         /*ground state*/
         float m_groundY{0.0f};
-		float m_groundMargin{ 20.0f };
-        float m_gravity{500.0f};
-        float m_jumpStrength{-500.0f};
+		float m_groundMargin{ 10.0f };
+        float m_gravity{980.0f};
+        float m_jumpStrength{-650.0f};
 
         /*screen dimensions*/
         int m_windowWidth{0};
