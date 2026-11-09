@@ -6,19 +6,23 @@ void InputManager::handleInput(const SDL_Event *event){
     if(!event) return;
     if(event->type == SDL_EVENT_KEY_DOWN){
         currentMode = InputMode::KEYBOARD_MOUSE;
-        switch(event->key.key){
-            case SDLK_UP:
-                moveUp = true;
-                break;
-            case SDLK_DOWN:
-                moveDown = true;
-                break;
-            case SDLK_LEFT:
-                moveLeft = true;
-                break;
-            case SDLK_RIGHT:
-                moveRight = true;
-                break;
+
+        if(!event->key.repeat){ //ignore repeated pressing, wont consume both jumps.
+            switch(event->key.key){
+                case SDLK_UP:
+                    moveUp = true;
+                    m_jumpPressed = true; //triggered for a sigle frame
+                    break;
+                case SDLK_DOWN:
+                    moveDown = true;
+                    break;
+                case SDLK_LEFT:
+                    moveLeft = true;
+                    break;
+                case SDLK_RIGHT:
+                    moveRight = true;
+                    break;
+            }
         }
     }
     if(event->type == SDL_EVENT_KEY_UP){
@@ -56,6 +60,7 @@ void InputManager::handleInput(const SDL_Event *event){
         switch(event->gbutton.button){
             case SDL_GAMEPAD_BUTTON_DPAD_UP:
                 moveUp = true;
+                m_jumpPressed = true;
                 break;
             case SDL_GAMEPAD_BUTTON_DPAD_DOWN:
                 moveDown = true;
@@ -86,7 +91,9 @@ void InputManager::handleInput(const SDL_Event *event){
         }
     }
 }
-
+bool InputManager::isJumpPressed() const{
+    return m_jumpPressed;
+}
 bool InputManager::isGamepadConnected() const{
     return gamepad != nullptr;
 }

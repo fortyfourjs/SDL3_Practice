@@ -10,6 +10,8 @@ void Board::init(int windowWidth, int windowHeight) {
     m_playerY = m_groundY;
 
 	m_playerX = ((float)m_windowWidth - CHARACTER_SIZE) / 2.0f;
+    m_maxJumps = 2;
+    m_jumpsCount = 0;
 
     //populate platforms
     m_platforms.clear();
@@ -32,13 +34,16 @@ void Board::init(int windowWidth, int windowHeight) {
     m_platforms.push_back(platform2);
 }
 
-void Board::update(float deltaTime, const InputManager& input){
+void Board::update(float deltaTime, InputManager& input){
     for(auto& platform : m_platforms){ //updpate platform positions
         updatePlatform(&platform, deltaTime);
     }
-    if(input.moveUp && m_isGrounded){ //jump input and gravity
+    
+    if((input.moveUp && m_isGrounded) || (input.isJumpPressed() && m_jumpsCount < m_maxJumps)){ //jump input and gravity
         m_playerVelocityY = m_jumpStrength;
+        m_jumpsCount++;
         m_isGrounded = false;
+        input.consumeJump();
     }
     m_playerVelocityY += m_gravity * deltaTime;
     m_playerY += m_playerVelocityY * deltaTime;
@@ -70,6 +75,7 @@ void Board::update(float deltaTime, const InputManager& input){
                     m_playerY = platform.rect.y - CHARACTER_SIZE;
                     m_playerVelocityY = 0.0f;
                     m_isGrounded = true;
+                    m_jumpsCount = 0;
 
                     //player moves with the platform
                     m_playerX += platform.speed * platform.dirX * deltaTime;
@@ -90,6 +96,7 @@ void Board::update(float deltaTime, const InputManager& input){
         m_playerY = m_groundY;
         m_playerVelocityY = 0.0f;
         m_isGrounded = true;
+        m_jumpsCount = 0;
     }
     //top screen limit
     if(m_playerY < 0.0f){

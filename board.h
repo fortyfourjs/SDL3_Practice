@@ -29,6 +29,8 @@ class Board{
         float m_playerY{0.0f};
         float m_playerVelocityX{0.0f};
         float m_playerVelocityY{0.0f};
+        int   m_jumpsCount;
+        int   m_maxJumps;
         bool  m_isGrounded = true;
 
         /*ground state*/
@@ -52,7 +54,7 @@ class Board{
         std::vector<MovingPlatform> m_platforms;
         void renderPlatform(SDL_Renderer* renderer);
 		void init(int windowWidth, int windowHeight);
-        void update(float deltaTime, const InputManager& input);
+        void update(float deltaTime, InputManager& input);
         void updatePlatform(MovingPlatform *m_platforms, float deltaTime);
         void render(SDL_Renderer* renderer, SDL_Texture* characterTexture);
         

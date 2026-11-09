@@ -9,15 +9,18 @@ class InputManager{
     public:
         enum class InputMode{KEYBOARD_MOUSE, GAMEPAD};
         void handleInput(const SDL_Event *event);
+        void consumeJump() { m_jumpPressed = false; }
 
         bool moveUp = false;
         bool moveDown = false;
         bool moveRight = false;
         bool moveLeft = false;
         bool isGamepadConnected() const;
+        bool isJumpPressed() const;
     
     private:
         SDL_Gamepad *gamepad = nullptr;
         InputMode currentMode = InputMode::KEYBOARD_MOUSE;
+        bool m_jumpPressed = false;
 };
 
