@@ -9,16 +9,21 @@ void InputManager::handleInput(const SDL_Event *event){
 
         if(!event->key.repeat){ //ignore repeated pressing, wont consume both jumps.
             switch(event->key.key){
+                case SDLK_W:
+                case SDLK_SPACE:
                 case SDLK_UP:
                     moveUp = true;
                     m_jumpPressed = true; //triggered for a sigle frame
                     break;
+                case SDLK_S:
                 case SDLK_DOWN:
                     moveDown = true;
                     break;
+                case SDLK_A:
                 case SDLK_LEFT:
                     moveLeft = true;
                     break;
+                case SDLK_D:
                 case SDLK_RIGHT:
                     moveRight = true;
                     break;
@@ -28,15 +33,20 @@ void InputManager::handleInput(const SDL_Event *event){
     if(event->type == SDL_EVENT_KEY_UP){
         currentMode = InputMode::KEYBOARD_MOUSE;
         switch(event->key.key){
+            case SDLK_W:
+            case SDLK_SPACE:
             case SDLK_UP:
                 moveUp = false;
                 break;
+            case SDLK_S:
             case SDLK_DOWN:
                 moveDown = false;
                 break;
+            case SDLK_A:
             case SDLK_LEFT:
                 moveLeft = false;
                 break;
+            case SDLK_D:
             case SDLK_RIGHT:
                 moveRight = false;
                 break;
