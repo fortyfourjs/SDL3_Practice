@@ -18,20 +18,30 @@ void Board::init(int windowWidth, int windowHeight) {
     MovingPlatform platform1;
     platform1.rect = {200.0f, 400.0f, 150.0f, 20.0f};
     platform1.startX = 100.0f;
-    platform1.endX = 400.0f;
+    platform1.endX = 700.0f;
     platform1.speed = 100.0f;
     platform1.dirX = 1.0f;
     platform1.dirY = 0.0f;
     MovingPlatform platform2;
     platform2.rect = {300.0f, 200.0f, 100.0f, 20.0f};
     platform2.startX = 200.0f;
-    platform2.endX = 500.0f;
+    platform2.endX = 1000.0f;
     platform2.speed = 150.0f;
     platform2.dirX = -1.0f;
     platform2.dirY = 0.0f;
+    MovingPlatform platform3;
+    platform3.rect = {200.0f, 100.0f, 120.0f, 20.0f};
+    platform3.startX = 200.0f;
+    platform3.endX = 200.0f;
+    platform3.startY = 300.0f;
+    platform3.endY = 1000.0f;
+    platform3.speed = 150.0f;
+    platform3.dirX = 0.0f;
+    platform3.dirY = -1.0f;
 
     m_platforms.push_back(platform1);
     m_platforms.push_back(platform2);
+    m_platforms.push_back(platform3);
 }
 
 void Board::update(float deltaTime, InputManager& input){
@@ -127,12 +137,23 @@ void Board::updatePlatform(MovingPlatform *m_platforms, float deltaTime){
     m_platforms->rect.x += m_platforms->speed * m_platforms->dirX * deltaTime;
     m_platforms->rect.y += m_platforms->speed * m_platforms->dirY * deltaTime;
 
-    if(m_platforms->rect.x >= m_platforms->endX){
-        m_platforms->rect.x = m_platforms->endX;
-        m_platforms->dirX = -1.0f;
-    }else if(m_platforms->rect.x <= m_platforms->startX){
-        m_platforms->rect.x = m_platforms->startX;
-        m_platforms->dirX= 1.0f;
+    if(m_platforms->dirX != 0.0f){
+        if(m_platforms->rect.x >= m_platforms->endX){
+            m_platforms->rect.x = m_platforms->endX;
+            m_platforms->dirX = -1.0f;
+        }else if(m_platforms->rect.x <= m_platforms->startX){
+            m_platforms->rect.x = m_platforms->startX;
+            m_platforms->dirX= 1.0f;
+        }
+    }
+    if(m_platforms->dirY != 0.0f){
+        if(m_platforms->rect.y >= m_platforms->endY){
+            m_platforms->rect.y = m_platforms->endY;
+            m_platforms->dirY = -1.0f;
+        }else if(m_platforms->rect.y <= m_platforms->startY){
+            m_platforms->rect.y = m_platforms->startY;
+            m_platforms->dirY = 1.0f;
+        }
     }
 }
 void Board::renderPlatform(SDL_Renderer* renderer){
