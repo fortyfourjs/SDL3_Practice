@@ -60,8 +60,10 @@ void Board::update(float deltaTime, InputManager& input){
 
     if(input.moveLeft == true){
         m_playerVelocityX = -200.0f;
+        m_flipMode = SDL_FLIP_HORIZONTAL; //flipping sprite to the left
     }else if(input.moveRight == true){
         m_playerVelocityX = 200.0f;
+        m_flipMode = SDL_FLIP_NONE; //facing right(default)
     }else{
         m_playerVelocityX = 0.0f;
     }
@@ -124,7 +126,15 @@ void Board::render(SDL_Renderer* renderer, SDL_Texture* characterTexture){
         SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
         SDL_RenderFillRect(renderer, &playerRect);
     }else{
-        SDL_RenderTexture(renderer, characterTexture, nullptr, &playerRect);
+        SDL_RenderTextureRotated(
+            renderer,
+            characterTexture,
+            nullptr,
+            &playerRect,
+            0.0,
+            nullptr,
+            m_flipMode
+        );
     }
     float groundLineY = m_groundY + CHARACTER_SIZE;
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);

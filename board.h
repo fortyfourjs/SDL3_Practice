@@ -19,6 +19,9 @@ class Entity {
 };
 
 class Board{
+    private:
+        SDL_FlipMode m_flipMode { SDL_FLIP_NONE };
+        
     public:
         static constexpr int GRID_COLS = 10;
         static constexpr int GRID_ROWS = 20;

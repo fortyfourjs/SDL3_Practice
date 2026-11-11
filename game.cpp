@@ -20,7 +20,7 @@ bool Game::init(const char* title, int width, int height) {
 
 	m_characterTexture = IMG_LoadTexture(m_renderer, "assets/charmeleon.png");
 	if (!m_characterTexture) {
-		SDL_Log("Error loading texture: %s", SDL_GetError());
+		SDL_Log("Error loading texture: %s", SDL_GetError());			
 	}
 	return true;
 }
