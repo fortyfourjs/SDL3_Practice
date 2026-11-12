@@ -10,7 +10,6 @@ void Board::init(int windowWidth, int windowHeight) {
     m_playerY = m_groundY;
 
 	m_playerX = ((float)m_windowWidth - CHARACTER_SIZE) / 2.0f;
-    m_maxJumps = 2;
     m_jumpsCount = 0;
 
     //populate platforms
@@ -49,7 +48,7 @@ void Board::update(float deltaTime, InputManager& input){
         updatePlatform(&platform, deltaTime);
     }
     
-    if((input.moveUp && m_isGrounded) || (input.isJumpPressed() && m_jumpsCount < m_maxJumps)){ //jump input and gravity
+    if((input.moveUp && m_isGrounded) || (input.isJumpPressed() && m_jumpsCount < MAX_JUMPS)){ //jump input and gravity
         m_playerVelocityY = m_jumpStrength;
         m_jumpsCount++;
         m_isGrounded = false;
@@ -59,10 +58,10 @@ void Board::update(float deltaTime, InputManager& input){
     m_playerY += m_playerVelocityY * deltaTime;
 
     if(input.moveLeft == true){
-        m_playerVelocityX = -200.0f;
+        m_playerVelocityX = -MOVE_SPEED;
         m_flipMode = SDL_FLIP_HORIZONTAL; //flipping sprite to the left
     }else if(input.moveRight == true){
-        m_playerVelocityX = 200.0f;
+        m_playerVelocityX = MOVE_SPEED;
         m_flipMode = SDL_FLIP_NONE; //facing right(default)
     }else{
         m_playerVelocityX = 0.0f;
@@ -83,7 +82,7 @@ void Board::update(float deltaTime, InputManager& input){
             //landing on top
             if(m_playerVelocityY >= 0.0f){
                 float prevFeetY = (m_playerY + CHARACTER_SIZE) - (m_playerVelocityY * deltaTime);
-                if(prevFeetY <= platform.rect.y + 15.0f){
+                if(prevFeetY <= platform.rect.y + COLLISION_TOLERANCE){
                     m_playerY = platform.rect.y - CHARACTER_SIZE;
                     m_playerVelocityY = 0.0f;
                     m_isGrounded = true;
@@ -96,7 +95,7 @@ void Board::update(float deltaTime, InputManager& input){
             //moving up, head bonk
             else if(m_playerVelocityY < 0.0f){
                 float prevHeadY = m_playerY - (m_playerVelocityY * deltaTime);
-                if(prevHeadY >= platform.rect.y + platform.rect.h -15.0f){
+                if(prevHeadY >= platform.rect.y + platform.rect.h - COLLISION_TOLERANCE){
                     m_playerY = platform.rect.y + platform.rect.h;
                     m_playerVelocityY = 0.0f;
                 }

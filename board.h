@@ -23,9 +23,10 @@ class Board{
         SDL_FlipMode m_flipMode { SDL_FLIP_NONE };
         
     public:
-        static constexpr int GRID_COLS = 10;
-        static constexpr int GRID_ROWS = 20;
         static constexpr int CHARACTER_SIZE = 90;
+        static constexpr int MAX_JUMPS = 2;
+        static constexpr float MOVE_SPEED = 200.0f;
+        static constexpr float COLLISION_TOLERANCE = 15.0f;
 
         /*player state*/
         float m_playerX{0.0f};
@@ -33,7 +34,6 @@ class Board{
         float m_playerVelocityX{0.0f};
         float m_playerVelocityY{0.0f};
         int   m_jumpsCount;
-        int   m_maxJumps;
         bool  m_isGrounded = true;
 
         /*ground state*/
